@@ -1,0 +1,30 @@
+name: Build Windows EXE
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: دریافت فایل‌ها
+        uses: actions/checkout@v4
+
+      - name: نصب Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: نصب وابستگی‌ها
+        run: npm install
+
+      - name: ساخت EXE
+        run: npx electron-builder --win nsis --publish never
+
+      - name: آپلود خروجی
+        uses: actions/upload-artifact@v7
+        with:
+          name: Windows-Installer
+          path: dist/*.exe
